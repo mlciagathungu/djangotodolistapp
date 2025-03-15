@@ -1,0 +1,196 @@
+{% extends 'todolistapp/base.html' %}
+{% load static %}
+{% block content %}
+<style>
+    #h2 {
+        color: #0b0b0b;
+        justify-items: center;
+        align-items: center;
+        display: inline;
+        background-origin: padding-box;
+        text-align: center;
+        margin-left: 45%;
+
+    }
+    #add{
+        color: rgb(230, 226, 226);
+        justify-items: center;
+        align-items: center;
+        display: inline;
+        background-origin: padding-box;
+        background-color: blueviolet;
+        width: 100%;
+    }
+    #add1{
+        color: rgb(232, 228, 228);
+        justify-items: center;
+        align-items: center;
+        display: inline;
+        background-origin: padding-box;
+        background-color: rgb(24, 236, 73);
+        width: 100%;
+    }
+    .forma {
+        border: 2px solid rgb(89, 85, 85);
+        display: flex;
+        flex-direction: column;
+        width: 95%;
+        padding: 10px;
+        margin: 0 auto;
+        border-radius: 6px;
+        padding: 0px;
+    }
+    .formb {
+        border: 2px solid rgb(75, 71, 71);
+        display: flex;
+        flex-direction: column;
+        width: 95%;
+        padding: 10px;
+        margin: 0 auto;
+        border-radius: 6px;
+        padding: 0px;
+
+    }
+    li {
+        list-style: none;
+        margin: 0px ;
+        padding: 3px;
+        border: 2px solid #8e8c8c;
+        border-radius: 3px;
+        font-size: small;
+        width: 97%;
+    }
+    #btn {
+        border: 1px solid rgb(136, 38, 229);
+        background-color:rgb(142, 37, 240);
+        color: aliceblue;
+        cursor: pointer;
+        margin-top: 5px;
+    }
+    #btn1 {
+        border: 1px solid #07ef07;
+        background-color: #26ef07;
+        color: aliceblue;
+        cursor: pointer;
+        margin-top: 5px;
+    }
+    #span {
+        border: 1px solid transparent;
+        background-color: rgb(36, 198, 198);
+        font-size: 0.8em;
+        color: #5df40c;
+        padding: 2px;
+    
+    }
+    #span1 {
+        border: 1px solid transparent;
+        background-color: rgb(156, 195, 39);
+        font-size: 0.8em;
+        color: #5df40c;
+        padding: 2px;
+        margin: 1%;
+    }
+    #a {
+        border:1px solid #5df40c;
+        color: rgb(80, 225, 13);
+        text-decoration: none;
+        margin-left: 10px;
+        cursor: pointer;
+        border-radius: 3px;
+
+    }
+    #a:hover {
+        text-decoration: underline;
+        background-color: #5df40c;
+        color: aliceblue;
+    }
+    #a1 {
+        border:1px solid #ef2607;
+        color: rgb(240, 37, 10);
+        text-decoration: none;
+        margin-left: 10px;
+        cursor: pointer;
+        border-radius: 3px;
+
+
+    }
+    #a1:hover {
+        text-decoration: underline;
+        background-color: #ef2607;
+        color: aliceblue;
+    }
+    ul {
+        padding: 0px;
+        margin: 0px;
+        width: 100%;
+    }
+</style>
+<h2 id="h2">Task Manager</h2>
+{#    create the form to register taskers#}
+    <form  class="forma"{% url 'add_tasker' %} method="post">
+        <h3 id="add">Add a Tasker</h3>
+         {% csrf_token %}
+    <input type="text" name="user_tasker" placeholder="New Tasker">
+        <input type="email" name="user_email" placeholder="Email">
+        <button id="btn" type="submit">Add Tasker</button>
+    </form>
+    <br>
+{# form : the action attribute indicates the file to process this form #}
+<form class="formb" action="{% url 'add_task' %}" method="post">
+     {% csrf_token %}
+     <h3 id="add1"> Add a Task</h3>
+    <input type="text" name="task" placeholder="New Task">
+{#    this is the taskers dropdown #}
+    <select name="tasker">
+         <option value="">Select a Tasker</option>
+        {% for tasker in taskers %}
+            <option value="{{ tasker.id }}">
+                {{ tasker.username }}
+            </option>
+        {% endfor %}
+    </select>
+    <button id="btn1" type="submit">Add Task</button>
+</form>
+
+{#    create the list #}
+<h4>My tasks</h4>
+<form class="formc">
+    <ul>
+         {% for task in tasks %}
+                <li>
+                    {{ task.title}}  -  completed {{ task.completed }}
+                    <span id="span">
+                        - Assigned to - {{ task.tasker.username }}
+                    </span>
+                    <span id="span1">
+                        - Email to - {{ task.tasker.email }}
+                     </span>
+                    {% if task.completed %}
+                        Completed
+                   {% else %}
+                       <a id="a" href="{% url 'mark_complete' task.id %}">
+                           Mark as Done</a>
+                   {% endif %}
+                <a id="a1" href="{% url 'delete_task' task.id %}">
+                    Delete </a>
+                </li>
+{#             show this on no tasks#}
+             {% empty %}
+             <li>NO TASKS AVAILABLE</li>
+         {% endfor %}
+    </ul>
+</form>
+
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
